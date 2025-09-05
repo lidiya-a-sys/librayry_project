@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Library Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georgia', serif;
+        }
+        
+        body {
+            background: linear-gradient(to bottom, #f5f5f5 0%, #e0e0e0 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill-opacity="0.02" fill="%23000000" width="100" height="100"/><path fill-opacity="0.03" fill="%23000000" d="M0,0 L100,100 M100,0 L0,100"/></svg>');
+        }
+        
+        .container {
+            background-color: #f9f7f2;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid #d4af37;
+        }
+        
+        .decoration {
+            flex: 1;
+            background: linear-gradient(135deg, #1a2a6c 0%, #2c3e50 100%);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            color: white;
+        }
+        
+        .decoration::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill-opacity="0.03" fill="%23ffffff" width="100" height="100"/><path fill-opacity="0.04" fill="%23ffffff" d="M0,0 L100,100 M100,0 L0,100"/></svg>');
+        }
+        
+        .decoration-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 400px;
+        }
+        
+        .decoration i {
+            font-size: 64px;
+            margin-bottom: 20px;
+            color: #d4af37;
+        }
+        
+        .decoration h2 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: #f5f5f5;
+        }
+        
+        .decoration p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #e0e0e0;
+        }
+        
+        .form-section {
+            flex: 1;
+            padding: 40px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 15px;
+        }
+        
+        .tab-control {
+            display: flex;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #7f8c8d;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .tab.active {
+            color: #2c3e50;
+        }
+        
+        .tab.active::after {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #8b0000;
+        }
+        
+        .form {
+            display: none;
+        }
+        
+        .form.active {
+            display: block;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2c3e50;
+            font-size: 14px;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 14px 15px 14px 45px;
+            border: 1px solid #dcdcdc;
+            border-radius: 4px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background-color: #fff;
+        }
+        
+        .input-group input:focus {
+            border-color: #8b0000;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(139, 0, 0, 0.1);
+        }
+        
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 40px;
+            color: #7f8c8d;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: #8b0000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            background: #6d0000;
+        }
+        
+        .forgot-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        .forgot-link a {
+            color: #8b0000;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .forgot-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .admin-note {
+            background: #f0f0f0;
+            border-left: 4px solid #8b0000;
+            padding: 12px;
+            margin-top: 25px;
+            font-size: 13px;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .admin-note h4 {
+            color: #8b0000;
+            margin-bottom: 5px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .logo-icon {
+            background: #8b0000;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .logo-text {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        @media (max-width: 768px) {
+            .decoration {
+                display: none;
+            }
+            
+            .container {
+                flex-direction: column;
+                max-width: 100%;
+            }
+            
+            .form-section {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="decoration">
+            <div class="decoration-content">
+                <i class="fas fa-book-reader"></i>
+                <h2>College Library Management System</h2>
+                <p>Access is strictly limited to authorized college management personnel. This system contains sensitive information and administrative controls.</p>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="logo-text">Library<span style="color: #8b0000;">Admin</span></div>
+            </div>
+            
+            <div class="header">
+                <h1 id="form-title">Management Portal Login</h1>
+                <p id="form-subtitle">Restricted Access - College Staff Only</p>
+            </div>
+            
+            <div class="tab-control">
+                <div class="tab active" id="login-tab">Login</div>
+                <div class="tab" id="register-tab">Register</div>
+            </div>
+            
+            <form class="form active" id="login-form">
+                <div class="input-group">
+                    <label for="login-email">College Email</label>
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="login-email" placeholder="Enter your college email" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="login-password">Password</label>
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="login-password" placeholder="Enter your password" required>
+                </div>
+                
+                <button type="submit" class="btn">Login to Dashboard</button>
+                
+                <div class="forgot-link">
+                    <a href="#">Forgot Password?</a>
+                </div>
+            </form>
+            
+            <form class="form" id="register-form">
+                <div class="input-group">
+                    <label for="register-name">Full Name</label>
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="register-name" placeholder="Enter your full name" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="register-email">College Email</label>
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="register-email" placeholder="Enter your college email" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="register-id">Staff ID</label>
+                    <i class="fas fa-id-card"></i>
+                    <input type="text" id="register-id" placeholder="Enter your staff ID" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="register-password">Password</label>
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="register-password" placeholder="Create a strong password" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="register-confirm">Confirm Password</label>
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="register-confirm" placeholder="Confirm your password" required>
+                </div>
+                
+                <button type="submit" class="btn">Register Account</button>
+            </form>
+            
+            <div class="admin-note">
+                <h4>Administrative Note:</h4>
+                <p>Access is restricted to college management staff only. Students are not permitted to create accounts or access the management system. All activities are logged for security purposes.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        const loginTab = document.getElementById('login-tab');
+        const registerTab = document.getElementById('register-tab');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const formTitle = document.getElementById('form-title');
+        const formSubtitle = document.getElementById('form-subtitle');
+        
+        loginTab.addEventListener('click', () => {
+            loginTab.classList.add('active');
+            registerTab.classList.remove('active');
+            loginForm.classList.add('active');
+            registerForm.classList.remove('active');
+            formTitle.textContent = "Management Portal Login";
+            formSubtitle.textContent = "Restricted Access - College Staff Only";
+        });
+        
+        registerTab.addEventListener('click', () => {
+            registerTab.classList.add('active');
+            loginTab.classList.remove('active');
+            registerForm.classList.add('active');
+            loginForm.classList.remove('active');
+            formTitle.textContent = "Create Management Account";
+            formSubtitle.textContent = "Register for Library System Access";
+        });
+        
+        // Form validation and submission
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            // Basic validation
+            if (!email || !password) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            // Check if it's a college email (simple validation)
+            if (!email.endsWith('.edu')) {
+                alert('Please use a valid college email address');
+                return;
+            }
+            
+            // Check credentials against stored users
+            const users = JSON.parse(localStorage.getItem('libraryUsers')) || [];
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                // Create session
+                sessionStorage.setItem('libraryUser', JSON.stringify(user));
+                
+                // Redirect to management system
+                window.location.href = 'manage.html';
+            } else {
+                alert('Invalid email or password');
+            }
+        });
+        
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const staffId = document.getElementById('register-id').value;
+            const password = document.getElementById('register-password').value;
+            const confirm = document.getElementById('register-confirm').value;
+            
+            // Basic validation
+            if (!name || !email || !staffId || !password || !confirm) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            if (password !== confirm) {
+                alert('Passwords do not match');
+                return;
+            }
+            
+            if (password.length < 8) {
+                alert('Password must be at least 8 characters long');
+                return;
+            }
+            
+            // Check if it's a college email (simple validation)
+            if (!email.endsWith('.edu')) {
+                alert('Please use a valid college email address');
+                return;
+            }
+            
+            // Check if user already exists
+            const users = JSON.parse(localStorage.getItem('libraryUsers')) || [];
+            if (users.some(user => user.email === email)) {
+                alert('User with this email already exists');
+                return;
+            }
+            
+            // Create new user
+            const newUser = {
+                id: users.length > 0 ? Math.max(...users.map(user => user.id)) + 1 : 1,
+                name,
+                email,
+                staffId,
+                password,
+                registeredAt: new Date().toISOString()
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('libraryUsers', JSON.stringify(users));
+            
+            // Create session
+            sessionStorage.setItem('libraryUser', JSON.stringify(newUser));
+            
+            alert('Registration successful! Redirecting to management system...');
+            
+            // Redirect to management system
+            window.location.href = 'manage.html';
+        });
+    </script>
+</body>
+</html>
